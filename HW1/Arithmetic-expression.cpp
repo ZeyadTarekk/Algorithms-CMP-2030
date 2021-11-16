@@ -51,7 +51,4 @@ int main() {
     cout<<"Possible";
   else
     cout<<"Impossible";
-
-  // cout<<endl<<(int)'+';
-  
 }
