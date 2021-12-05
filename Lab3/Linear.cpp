@@ -3,6 +3,7 @@
 #include<ostream>
 #include<fstream>
 #include<vector>
+#include<algorithm>
 #include<chrono>
 using namespace std;
 
@@ -35,63 +36,70 @@ int main() {
 		inp >> word;
 		A[i] = word;
 	}
-	//cout << A[0] <<" "<< A[19999];
+
 	vector<string> H(24000, "");
-	vector<string> H2(24000, "");
-	//cout << "ZEYAD" << H[0] << H[23999] << "ZEYAD";
+
 	int index;
-	int collision = 0, collision2 = 0;
-	for (int i = 0; i < 20000; i++) {
-		index = secondHashFunction(A[i]);
-		while (H[index] != "") {
-			index++;
-			collision++;
-		}
-			
-		if (index < 24000)
-			H[index] = A[i];
-	}
-	cout << "\nCollision: " << collision << endl;
+	int collision2 = 0;// , collision = 0;
+
+
+
 	for (int i = 0; i < 40; i++) {
 		auto start = std::chrono::system_clock::now();
 		for (int j = (i * 500); j < (i * 500 + 500); j++) {
 			index = secondHashFunction(A[j]);
-			while (H2[index] != "") {
+			while (H[index] != "" && H[index] != "!") {
 				index++;
 				collision2++;
 			}
 
 			if (index < 24000)
-				H2[index] = A[j];
+				H[index] = A[j];
 		}
 		auto end = std::chrono::system_clock::now();
 		std::chrono::duration<double> elapsed_seconds = end - start;
 		std::time_t end_time = std::chrono::system_clock::to_time_t(end);
 		cout << "Elapsed time in "<<i+1 <<" 500: " << elapsed_seconds.count() * (10 * 10 * 10) << "ms\n";
 	}
-	cout << "\nCollision: " << collision2 << endl;
-	cout << H[100] << " " << H2[100] << " " << H[1000] << " " << H2[1000] << " " << H[10000]<<" " << H2[10000] << " " << H[15000] << " " << H2[15000];
-	for (int i = 0; i < 24000; i++) {
-		if (H[i] != H2[i]) {
-			cout << "\nWRONG\n" << H[i] << " " << H2[i];
+	
+	//Deletion from 14000 to 14999
+	string searching;
+	int index2;
+	int propMin = INT_MAX, propMax = INT_MIN, prop;
+	vector<int>propVec;
+	for (int i = 14000; i < 15000; i++) {
+		prop = 0;
+		searching = A[i];
+		
+		index2 = secondHashFunction(searching);
+		//cout << H[index2] << " " << searching << endl;
+		while (H[index2] != searching) {
+			if (H[index2] == "") {
+				//cout << endl << "NOT FOUND\n";
+				break;
+			}
+			prop++;
+			index2++;
+		}
+		if (H[index2] != "") {
+			propVec.push_back(prop);
+			if (prop > propMax)
+				propMax = prop;
+			if (prop < propMin)
+				propMin = prop;
+			//cout << H[index2] << " " << searching << endl;
+			H[index2] = "!";
 		}
 	}
-	//cout << "COLLISION: " << collision;
-	//string search = A[15000];
-	//int prop = 0;
-	//int indexSer = secondHashFunction(search);
-	//while (H[indexSer] != search) {
-	//	indexSer++;
-	//	prop++;
-	//}
-	//	
-	//cout << A[15000] << " " << H[indexSer]<<" "<<prop;
+	
+	cout<<"Max No. Of Probes: " << propMax <<endl;
+	cout << "Min No. Of Probes: " << propMin << endl;
+	int sum = 0;
+	for (int i = 0; i < propVec.size(); i++) {
+		sum += propVec[i];
+	}
+	cout << "Average No. Of Probes: " << (float)sum / propVec.size();
 	return 0;
 
-	//auto start = std::chrono::system_clock::now();
-	//auto end = std::chrono::system_clock::now();
-	//std::chrono::duration<double> elapsed_seconds = end - start;
-	//std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-	//statFile << "Elapsed time: " << elapsed_seconds.count() * (10 * 10 * 10) << "ms\n";
 
 }
