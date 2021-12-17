@@ -16,13 +16,12 @@ void maxPathBruteForce(int i,int j,const vector<vector<long long>>& vec, long lo
     }
 }
 long long maxPathDP(int i,int j,const vector<vector<long long>>& vec,vector<vector<pair<long long,bool>>> &vecDP,int n,int m){
-    if(i>=n || j>=m)
-        return 0;
+    if(i>=n|| j>=m)
+        return LONG_LONG_MIN;
     if(i==n-1&&j==m-1)
         return vec[i][j];
-    if(vecDP[i][j].second!= false)
+    if(vecDP[i][j].second)
         return vecDP[i][j].first;
-//    cout<<"Calc\n";
     long long down = maxPathDP(i+1,j,vec,vecDP ,n,m);
     long long right = maxPathDP(i,j+1,vec,vecDP ,n,m);
     long long rightDown = maxPathDP(i+1,j+1,vec,vecDP ,n,m);
@@ -40,9 +39,11 @@ int main() {
         for(int j=0;j<m;j++)
             cin>>vec[i][j];
     }
-    long long max = LONG_LONG_MIN;
-//    long long max = maxPathDP(0,0,vec,vecDP,n,m);
-    maxPathBruteForce(0,0,vec,max,0,n,m);
+//    vecDP[n-1][m-1].first=vec[n-1][m-1];
+//    vecDP[n-1][m-1].second=true;
+//    long long max = LONG_LONG_MIN;
+    long long max = maxPathDP(0,0,vec,vecDP,n,m);
+//    maxPathBruteForce(0,0,vec,max,0,n,m);
     cout<<max;
     return 0;
 }
