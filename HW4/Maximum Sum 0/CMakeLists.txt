@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
-project(Gold_Collector2)
+project(Maximum_Sum_0)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Gold_Collector2 main.cpp)
+add_executable(Maximum_Sum_0 main.cpp)
